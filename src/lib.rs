@@ -3,6 +3,8 @@ use std::str;
 
 #[derive(Debug, PartialEq)]
 enum Token {
+    LoopStart,
+    LoopEnd,
     Increment,
     Decrement,
     ShiftR,
@@ -14,16 +16,19 @@ pub struct Program {
     pointer: i32,
     tape: HashMap<i32, u8>,
     program: Vec<Token>,
+    bracket_map: HashMap<usize, usize>,
     index: usize,
 }
 
 impl Program {
     pub fn new(source: &str) -> Program {
+        let (program, bracket_map) = parse(source);
         Program {
             pointer: 0,
             index: 0,
             tape: HashMap::new(),
-            program: parse(source),
+            program,
+            bracket_map,
         }
     }
 
@@ -48,6 +53,18 @@ impl Program {
                     self.tape.insert(self.pointer, val - 1);
                 }
                 Token::Print => output.push(val),
+                Token::LoopStart => {
+                    if val == 0 {
+                        self.index = *self.bracket_map.get(&self.index).unwrap();
+                        continue;
+                    }
+                }
+                Token::LoopEnd => {
+                    if val != 0 {
+                        self.index = *self.bracket_map.get(&self.index).unwrap();
+                        continue;
+                    }
+                }
             }
 
             self.index += 1;
@@ -57,10 +74,29 @@ impl Program {
     }
 }
 
-fn parse(source: &str) -> Vec<Token> {
-    source
+fn parse(source: &str) -> (Vec<Token>, HashMap<usize, usize>) {
+    let mut brackets: Vec<usize> = Vec::new();
+    let mut bracket_map = HashMap::new();
+
+    let program = source
         .chars()
-        .map(|c| match c {
+        .enumerate()
+        .map(|(i, c)| match c {
+            '[' => {
+                brackets.push(i);
+                Ok(Token::LoopStart)
+            }
+            ']' => {
+                match brackets.pop() {
+                    Some(idx) => {
+                        bracket_map.insert(idx, i);
+                        bracket_map.insert(i, idx);
+                    }
+                    None => panic!("Unmatched brackets!"),
+                };
+
+                Ok(Token::LoopEnd)
+            }
             '+' => Ok(Token::Increment),
             '-' => Ok(Token::Decrement),
             '>' => Ok(Token::ShiftR),
@@ -69,7 +105,9 @@ fn parse(source: &str) -> Vec<Token> {
             _ => Err(()),
         })
         .filter_map(Result::ok)
-        .collect()
+        .collect();
+
+    (program, bracket_map)
 }
 
 #[cfg(test)]
@@ -82,5 +120,13 @@ mod tests {
         let mut prog = Program::new(source);
 
         assert_eq!("H", prog.execute());
+    }
+
+    #[test]
+    fn test_print_hello_world() {
+        let source = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
+        let mut prog = Program::new(source);
+
+        assert_eq!("Hello World!\n", prog.execute());
     }
 }
