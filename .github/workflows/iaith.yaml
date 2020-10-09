@@ -1,0 +1,25 @@
+name: Iaith Crate
+
+on:
+  pull_request:
+    branches:
+    - develop
+    - release
+
+  push:
+    branches:
+    - develop
+    - release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: |
+          cd iaith
+          cargo test
