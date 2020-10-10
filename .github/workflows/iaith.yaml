@@ -60,9 +60,10 @@ jobs:
           version=$(grep version Cargo.toml | sed 's/.*"\(.*\)"/\1/')
           echo "Version: $version"
 
-          echo "::set-env name=VERSION::$version"
+          echo "VERSION=$version" >> $GITHUB_ENV
+          echo "RELEASE_DATE=$release_date" >> $GITHUB_ENV
+
           echo "::set-output name=VERSION::$version"
-          echo "::set-env name=RELEASE_DATE::$release_date"
           echo "::set-output name=RELEASE_DATE::$release_date"
         if: steps.dorelease.outputs.yes
 
@@ -70,6 +71,10 @@ jobs:
         run: |
           cd iaith
           cargo build --release
+
+          git commit -am "Version bump ${VERSION}"
+          git tag -a "v${VERSION}" -m "New Release v${VERSION}"
+
           cargo login ${{ secrets.CARGO_TOKEN }}
           cargo publish
         if: steps.dorelease.outputs.yes
