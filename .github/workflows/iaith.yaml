@@ -57,7 +57,7 @@ jobs:
           bumpversion ${RELEASE_KIND}
           release_date=$(date +%Y-%m-%d)
 
-          version=$(jq -r .version app/package.json)
+          version=$(grep version Cargo.toml | sed 's/.*"\(.*\)"/\1/')
           echo "Version: $version"
 
           echo "::set-env name=VERSION::$version"
