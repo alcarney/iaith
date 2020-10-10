@@ -17,9 +17,68 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - run: |
+
+      - name: Test Crate
+        run: |
           cd iaith
           cargo test
+
+      - name: Should Release?
+        id: dorelease
+        run: |
+          ./scripts/should-release.sh
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+        if: steps.dorelease.outputs.yes
+
+      - name: Prepare Release
+        id: info
+        run: |
+          echo "Preparing ${RELEASE_KIND} release"
+
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+          bumpversion ${RELEASE_KIND}
+          release_date=$(date +%Y-%m-%d)
+
+          version=$(jq -r .version app/package.json)
+          echo "Version: $version"
+
+          echo "::set-env name=VERSION::$version"
+          echo "::set-output name=VERSION::$version"
+          echo "::set-env name=RELEASE_DATE::$release_date"
+          echo "::set-output name=RELEASE_DATE::$release_date"
+        if: steps.dorelease.outputs.yes
+
+      - name: Publish Crate
+        run: |
+          cargo build --release
+          cargo login ${{ secrets.CARGO_TOKEN }}
+          cargo publish
+        if: steps.dorelease.outputs.yes
+
+      - name: Push Tags
+        run: |
+          git push origin ${GIT_BRANCH}
+          git push origin --tags
+        if: steps.dorelease.outputs.yes
+
+      - name: Create Release
+        id: release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.info.outputs.VERSION }}
+          release_name: v${{ steps.info.outputs.VERSION}} - ${{ steps.info.outputs.RELEASE_DATE }}
+          draft: false
+          prerelease: steps.dorelease.outputs.develop
+        if: steps.dorelease.outputs.yes
