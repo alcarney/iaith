@@ -68,6 +68,7 @@ jobs:
 
       - name: Publish Crate
         run: |
+          cd iaith
           cargo build --release
           cargo login ${{ secrets.CARGO_TOKEN }}
           cargo publish

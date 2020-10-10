@@ -29,7 +29,14 @@ if [ "${GITHUB_REF}" = 'refs/heads/develop' ]; then
         patch*)
             RELEASE_KIND="patch";;
         *)
-            RELEASE_KIND="beta";;
+            version=$(grep version Cargo.toml | sed 's/.*"\(.*\)"/\1/')
+
+            if [ "$version" == *"beta"* ]; then
+                RELEASE_KIND="beta"
+            else
+                RELEASE_KIND="patch"
+            fi
+            ;;
     esac
 
     echo "::set-output name=develop::true"
