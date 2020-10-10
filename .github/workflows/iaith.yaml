@@ -38,6 +38,13 @@ jobs:
           python-version: 3.8
         if: steps.dorelease.outputs.yes
 
+      - name: Install Python Tools
+        run: |
+          python --version
+          python -m pip install --upgrade pip
+          python -m pip install bump2version
+        if: steps.dorelease.outputs.yes
+
       - name: Prepare Release
         id: info
         run: |
