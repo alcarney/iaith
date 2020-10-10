@@ -5,11 +5,15 @@ on:
     branches:
     - develop
     - release
+    paths:
+    - 'iaith/**'
 
   push:
     branches:
     - develop
     - release
+    paths:
+    - 'iaith/**'
 
 jobs:
   build:
