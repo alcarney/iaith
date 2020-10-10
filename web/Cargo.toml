@@ -1,0 +1,13 @@
+[package]
+name = "iaith_web"
+version = "0.0.1"
+authors = ["Alex Carney <alcarneyme@gmail.com>"]
+edition = "2018"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+iaith = "0.0.1"
+wasm-bindgen = "0.2.68"
