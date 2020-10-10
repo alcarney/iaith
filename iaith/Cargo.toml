@@ -1,6 +1,6 @@
 [package]
 name = "iaith"
-version = "0.0.1"
+version = "0.0.2-beta.1"
 description = "Implementing toy languages in rust"
 authors = ["Alex Carney <alcarneyme@gmail.com>"]
 edition = "2018"
