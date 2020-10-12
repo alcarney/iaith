@@ -1,0 +1,56 @@
+name: Iaith Web
+
+on:
+  pull_request:
+    branches:
+    - develop
+    - release
+    paths:
+    - 'web/**'
+
+  push:
+    branches:
+    - develop
+    - release
+    paths:
+    - 'web/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+  steps:
+  - uses: actions/checkout@2
+
+  - uses: actions-rs/toolchain@v1
+    with:
+      toolchain: stable
+
+   - name: Setup Node
+     uses: actions/setup-node@v1
+     with:
+       node-version: '12'
+
+   - run: |
+       cd web
+       npm install
+       npm run build
+
+   - name: Upload Site Artifact
+     uses: actions/upload-artifact@v1.0.0
+     with:
+       name: 'app'
+       path: web/dist
+
+   - name: Should Release?
+     id: dorelease
+     run: |
+       ./scripts/should-release.sh
+
+   - name: Deploy
+     uses: peaceiris/actions-gh-pages@v3
+     with:
+       github_token: ${{ secrets.GITHUB_TOKEN }}
+       publish_dir: ./web/dist
+       destination_dir: ${{ steps.dorelease.outputs.deploy_url }}
+     if: steps.dorelease.outputs.yes
