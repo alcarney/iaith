@@ -1,5 +1,6 @@
+import './styles.css'
 const rust = import('./pkg');
 
 rust
-    .then(m => m.execute('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.'))
-    .catch(console.error);
+  .then(m => m.execute('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.'))
+  .catch(console.error);
