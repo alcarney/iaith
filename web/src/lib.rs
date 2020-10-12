@@ -7,8 +7,9 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn execute(source: &str) {
+pub fn execute(source: &str) -> String {
     let mut prog = Program::new(source);
     let output = prog.execute();
-    alert(&output);
+
+    output
 }
