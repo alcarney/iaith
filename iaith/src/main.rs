@@ -1,4 +1,4 @@
-use iaith::Program;
+use iaith::brainf::Program;
 use std::env;
 use std::process;
 
