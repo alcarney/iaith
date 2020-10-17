@@ -41,6 +41,17 @@ pub enum Token {
     Print,
 }
 
+/// Used to represent the state the program is in.
+#[derive(Debug, PartialEq)]
+pub enum State {
+    /// The program has not yet been executed.
+    New,
+    /// The program is currently being executed.
+    Executing,
+    /// The program has been executed.
+    Terminated,
+}
+
 /// A container for all the state needed to execute a brainf*ck program.
 pub struct Program {
     /// A vector of tokens, representing the executable source code of the program
@@ -48,12 +59,15 @@ pub struct Program {
     /// A 'pointer' into the vector of tokens representing where in the code execution
     /// is currently happening.
     pub index: usize,
-    bracket_map: HashMap<usize, usize>,
     /// A map of cell number to value, representing the tape the program is manipulating
     pub tape: HashMap<i32, u8>,
     /// A 'pointer' represnting which cell in the tape the program is currently
     /// manipulating.
     pub pointer: i32,
+    /// Represents the state of the program's execution
+    pub state: State,
+
+    bracket_map: HashMap<usize, usize>,
 }
 
 impl Program {
@@ -68,49 +82,72 @@ impl Program {
             tape: HashMap::new(),
             program,
             bracket_map,
+            state: State::New,
         }
+    }
+
+    /// Execute the next instruction in the program.
+    pub fn step(&mut self) -> Option<String> {
+        match self.state {
+            State::New => self.state = State::Executing,
+            State::Executing => {
+                if self.index >= self.program.len() {
+                    self.state = State::Terminated;
+                    return None;
+                }
+            }
+            State::Terminated => return None,
+        }
+
+        let instruction = self.program.get(self.index).unwrap();
+        let value = match self.tape.get(&self.pointer) {
+            Some(v) => *v,
+            None => 0,
+        };
+
+        let mut out = String::new();
+        match instruction {
+            Token::ShiftR => self.pointer += 1,
+            Token::ShiftL => self.pointer -= 1,
+            Token::Increment => {
+                self.tape.insert(self.pointer, value + 1);
+            }
+            Token::Decrement => {
+                self.tape.insert(self.pointer, value - 1);
+            }
+            Token::LoopStart => {
+                if value == 0 {
+                    self.index = *self.bracket_map.get(&self.index).unwrap();
+                    return Some(out);
+                }
+            }
+            Token::LoopEnd => {
+                if value != 0 {
+                    self.index = *self.bracket_map.get(&self.index).unwrap();
+                    return Some(out);
+                }
+            }
+            Token::Print => {
+                out += str::from_utf8(&[value]).unwrap();
+            }
+        }
+
+        self.index += 1;
+        Some(out)
     }
 
     /// Execute the program, until it terminates.
     pub fn execute(&mut self) -> String {
-        let mut output: Vec<u8> = Vec::new();
+        let mut output = String::new();
 
-        while self.index < self.program.len() {
-            let ins = self.program.get(self.index).unwrap();
-
-            let val = match self.tape.get(&self.pointer) {
-                Some(v) => *v,
-                None => 0,
-            };
-
-            match ins {
-                Token::ShiftR => self.pointer += 1,
-                Token::ShiftL => self.pointer -= 1,
-                Token::Increment => {
-                    self.tape.insert(self.pointer, val + 1);
-                }
-                Token::Decrement => {
-                    self.tape.insert(self.pointer, val - 1);
-                }
-                Token::Print => output.push(val),
-                Token::LoopStart => {
-                    if val == 0 {
-                        self.index = *self.bracket_map.get(&self.index).unwrap();
-                        continue;
-                    }
-                }
-                Token::LoopEnd => {
-                    if val != 0 {
-                        self.index = *self.bracket_map.get(&self.index).unwrap();
-                        continue;
-                    }
-                }
+        while self.state != State::Terminated {
+            match self.step() {
+                Some(s) => output += &s,
+                None => (),
             }
-
-            self.index += 1;
         }
 
-        String::from(str::from_utf8(&output[..]).unwrap())
+        output
     }
 }
 
@@ -153,6 +190,31 @@ fn parse(source: &str) -> (Vec<Token>, HashMap<usize, usize>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_step_program() {
+        let mut prog = Program::new("++");
+        assert_eq!(prog.index, 0);
+        assert_eq!(prog.state, State::New);
+
+        let ret = prog.step();
+        assert_eq!(ret, Some(String::from("")));
+        assert_eq!(prog.state, State::Executing);
+        assert_eq!(prog.index, 1);
+        assert_eq!(*prog.tape.get(&0).unwrap(), 1);
+
+        let ret = prog.step();
+        assert_eq!(ret, Some(String::from("")));
+        assert_eq!(prog.state, State::Executing);
+        assert_eq!(prog.index, 2);
+        assert_eq!(*prog.tape.get(&0).unwrap(), 2);
+
+        let ret = prog.step();
+        assert_eq!(ret, None);
+        assert_eq!(prog.state, State::Terminated);
+        assert_eq!(prog.index, 2);
+        assert_eq!(*prog.tape.get(&0).unwrap(), 2);
+    }
 
     #[test]
     fn test_print_h() {
