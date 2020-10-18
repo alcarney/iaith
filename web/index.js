@@ -1,4 +1,5 @@
 import './styles.css'
+
 const rust = import('./pkg');
 
 const runButton = document.getElementById("run")
@@ -21,7 +22,7 @@ function setCell(index, value) {
 }
 
 for (let i = 0; i < 64; i++) {
-  setCell(i, 0)
+  //  setCell(i, 0)
 }
 
 rust
