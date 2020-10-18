@@ -7,21 +7,31 @@
     <title>Iaith</title>
 </head>
 
-<body class="bg-gray-200 flex h-screen flex-col">
-    <header class="bg-blue-700 p-3">
-        <h1 class="text-2xl text-white font-semibold">Iaith</h1>
+<body class="flex flex-col h-screen bg-gray-200">
+    <header class="p-3 bg-gray-600 border-b border-gray-500">
+        <h1 class="text-2xl font-semibold text-white">Iaith</h1>
     </header>
-    <button id='run' class="rounded bg-blue-700 text-white px-2 py-1 ml-2 my-2 self-start">Run</button>
+    <div>
+        <h5 class="px-2 font-semibold text-white uppercase bg-gray-600 ">Memory</h5>
+        <div id="tape" class="flex overflow-x-auto"></div>
+    </div>
     <main class="flex flex-grow ">
-        <div class="m-2 flex-grow h-full">
-            <textarea id="input" class="w-full h-full"></textarea>
+        <div class="flex-grow h-full">
+            <h5 class="flex items-baseline justify-between px-2 font-semibold text-white uppercase bg-gray-600">
+                <span>Code</span>
+                <button id='run' class="font-semibold">Run ></button>
+            </h5>
+            <textarea id="input" class="w-full h-full font-mono"></textarea>
         </div>
-        <div class="m-2 h-full" style="min-width: 40%;">
-            <textarea id="output" class="w-full h-full" disabled></textarea>
+        <div class="flex flex-col h-full" style="min-width: 40%;">
+            <div class="w-full bg-white">
+                <h5 class="px-2 font-semibold text-white uppercase bg-gray-600">Output</h5>
+                <p id="output"></p>
+            </div>
         </div>
     </main>
     <footer class="flex bg-white border-t">
-        <p class="text-sm ml-auto mr-2 text-gray-700">v0.0.1</p>
+        <p class="ml-auto mr-2 text-sm text-gray-700">v0.0.1</p>
     </footer>
 </body>
 

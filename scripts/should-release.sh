@@ -29,7 +29,7 @@ if [ "${GITHUB_REF}" = 'refs/heads/develop' ]; then
         patch*)
             RELEASE_KIND="patch";;
         *)
-            version=$(grep version Cargo.toml | sed 's/.*"\(.*\)"/\1/')
+            version=$(grep version iaith/Cargo.toml | sed 's/.*"\(.*\)"/\1/')
 
             if [ "$version" == *"beta"* ]; then
                 RELEASE_KIND="beta"

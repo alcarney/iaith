@@ -1,4 +1,5 @@
 import './styles.css'
+
 const rust = import('./pkg');
 
 const runButton = document.getElementById("run")
@@ -10,7 +11,7 @@ rust
     runButton.addEventListener('click', event => {
       let source = input.value
       let result = mod.execute(source)
-      output.value = result
+      output.textContent = result
     })
 
   })

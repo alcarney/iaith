@@ -2,4 +2,8 @@
 
 @tailwind components;
 
+.place-center {
+    place-items: center;
+}
+
 @tailwind utilities;
