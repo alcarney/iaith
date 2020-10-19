@@ -575,6 +575,20 @@ video {
   border-color: rgba(160, 174, 192, var(--border-opacity));
 }
 
+.border-gray-600 {
+  --border-opacity: 1;
+  border-color: #718096;
+  border-color: rgba(113, 128, 150, var(--border-opacity));
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.border {
+  border-width: 1px;
+}
+
 .border-t {
   border-top-width: 1px;
 }
@@ -589,6 +603,10 @@ video {
 
 .table {
   display: table;
+}
+
+.grid {
+  display: grid;
 }
 
 .flex-col {
@@ -607,12 +625,20 @@ video {
   flex-grow: 1;
 }
 
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
 .font-mono {
   font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .font-semibold {
   font-weight: 600;
+}
+
+.h-12 {
+  height: 3rem;
 }
 
 .h-full {
@@ -643,6 +669,10 @@ video {
   overflow-x: auto;
 }
 
+.p-2 {
+  padding: 0.5rem;
+}
+
 .p-3 {
   padding: 0.75rem;
 }
@@ -666,6 +696,10 @@ video {
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.w-12 {
+  width: 3rem;
 }
 
 .w-full {
