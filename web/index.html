@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-screen">
 
 <head>
     <meta charset="UTF-8">
@@ -7,31 +7,27 @@
     <title>Iaith</title>
 </head>
 
-<body class="flex flex-col h-screen bg-gray-200">
-    <header class="p-3 bg-gray-600 border-b border-gray-500">
-        <h1 class="text-2xl font-semibold text-white">Iaith</h1>
+<body class="overflow-hidden bg-gray-200">
+
+    <header class="flex justify-between p-2 text-white bg-gray-600">
+        <h1 class="text-2xl font-bold">Iaith</h1>
+        <div class="flex items-center">
+            <button id="run" class="px-1 font-semibold border border-white rounded">Run</button>
+        </div>
+        <span></span>
     </header>
-    <div>
-        <h5 class="px-2 font-semibold text-white uppercase bg-gray-600 ">Memory</h5>
-        <div id="tape" class="flex overflow-x-auto"></div>
-    </div>
-    <main class="flex flex-grow ">
-        <div class="flex-grow h-full">
-            <h5 class="flex items-baseline justify-between px-2 font-semibold text-white uppercase bg-gray-600">
-                <span>Code</span>
-                <button id='run' class="font-semibold">Run ></button>
-            </h5>
-            <textarea id="input" class="w-full h-full font-mono"></textarea>
-        </div>
-        <div class="flex flex-col h-full" style="min-width: 40%;">
-            <div class="w-full bg-white">
-                <h5 class="px-2 font-semibold text-white uppercase bg-gray-600">Output</h5>
-                <p id="output"></p>
-            </div>
-        </div>
+    <main>
+        <h3 id="input-header" class="px-1 font-semibold text-white uppercase bg-gray-600 border-t ">Code</h3>
+        <div id="input" class=""></div>
+
+        <h3 id="output-header" class="px-1 font-semibold text-white uppercase bg-gray-600 border-t">Output</h3>
+        <div id="output" class="p-1 bg-white border-l"></div>
     </main>
-    <footer class="flex bg-white border-t">
-        <p class="ml-auto mr-2 text-sm text-gray-700">v0.0.1</p>
+    <footer>
+        <h3 class="px-1 font-semibold text-white uppercase bg-gray-600">Memory</h3>
+        <div id="tape" class="flex overflow-x-auto">
+            <div data-index="0" class="grid flex-shrink-0 w-12 h-12 p-2 bg-white place-center">0</div>
+        </div>
     </footer>
 </body>
 

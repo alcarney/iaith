@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "Debug Firefox",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "url": "http://localhost:8080/",
+            "webRoot": "${workspaceFolder}/web/",
+            "preLaunchTask": "${defaultBuildTask}"
+        }
+    ]
+}

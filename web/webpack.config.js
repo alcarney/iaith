@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
@@ -29,6 +30,10 @@ module.exports = {
           }
         ]
       },
+      {
+        test: /\.ttf$/,
+        use: ['file-loader']
+      }
     ]
   },
   plugins: [
@@ -36,6 +41,10 @@ module.exports = {
       template: 'index.html'
     }),
     new MiniCssExtractPlugin(),
+    new MonacoWebpackPlugin({
+      languages: [],
+      features: []
+    }),
     new WasmPackPlugin({
       crateDirectory: path.resolve(__dirname, ".")
     }),
