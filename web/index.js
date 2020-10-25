@@ -12,7 +12,22 @@ const outputHeader = document.getElementById("output-header")
 const runButton = document.getElementById("run")
 const tape = document.getElementById("tape")
 
+monaco.languages.register({ id: 'brainf*ck' })
+monaco.languages.setMonarchTokensProvider('brainf*ck', {
+  defaultToken: 'comment.doc',
+  tokenizer: {
+    root: [
+      [/[\[\]]/, 'constant'],
+      [/[<>]/, 'type.identifier'],
+      [/[+-]/, 'number.float'],
+      [/[.,]/, 'operator']
+    ]
+  }
+})
+
+
 let editor = monaco.editor.create(input, {
+  language: 'brainf*ck',
   value: 'hello, world',
 });
 
