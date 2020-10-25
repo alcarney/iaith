@@ -52,6 +52,6 @@ echo "Release type: ${RELEASE_KIND}"
 GIT_BRANCH=$(echo ${GITHUB_REF} | sed 's.refs/head/..')
 
 echo "::set-output name=yes::true"
-echo "::set-env name=RELEASE_KIND::${RELEASE_KIND}"
-echo "::set-env name=GIT_BRANCH::${GIT_BRANCH}"
 echo "::set-output name=deploy_url::${DEPLOY_URL}"
+echo "RELEASE_KIND=${RELEASE_KIND}" >> $GITHUB_ENV
+echo "GIT_BRANCH=${GIT_BRANCH}" >> $GITHUB_ENV
