@@ -575,18 +575,8 @@ video {
   border-color: rgba(255, 255, 255, var(--border-opacity));
 }
 
-.border-gray-600 {
-  --border-opacity: 1;
-  border-color: #718096;
-  border-color: rgba(113, 128, 150, var(--border-opacity));
-}
-
 .rounded {
   border-radius: 0.25rem;
-}
-
-.border-2 {
-  border-width: 2px;
 }
 
 .border {
