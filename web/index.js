@@ -28,7 +28,7 @@ monaco.languages.setMonarchTokensProvider('brainf*ck', {
 
 let editor = monaco.editor.create(input, {
   language: 'brainf*ck',
-  value: 'hello, world',
+  value: '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.',
 });
 
 function layout() {
