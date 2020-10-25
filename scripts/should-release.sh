@@ -31,7 +31,7 @@ if [ "${GITHUB_REF}" = 'refs/heads/develop' ]; then
         *)
             version=$(grep version iaith/Cargo.toml | sed 's/.*"\(.*\)"/\1/')
 
-            if [ "$version" == *"beta"* ]; then
+            if [[ "$version" == *"beta"* ]]; then
                 RELEASE_KIND="beta"
             else
                 RELEASE_KIND="patch"
