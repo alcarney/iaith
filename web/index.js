@@ -3,19 +3,32 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 
 const rust = import('./pkg');
 
-const html = document.querySelector("html")
-const runButton = document.getElementById("run")
-
-const inputHeader = document.getElementById("input-header")
-const input = document.getElementById('input')
-
-const outputHeader = document.getElementById("output-header")
-const output = document.getElementById("output")
-
 const footer = document.querySelector("footer")
+const html = document.querySelector("html")
+const input = document.getElementById('input')
+const inputHeader = document.getElementById("input-header")
+const output = document.getElementById("output")
+const outputHeader = document.getElementById("output-header")
+const runButton = document.getElementById("run")
+const tape = document.getElementById("tape")
+
+monaco.languages.register({ id: 'brainf*ck' })
+monaco.languages.setMonarchTokensProvider('brainf*ck', {
+  defaultToken: 'comment.doc',
+  tokenizer: {
+    root: [
+      [/[\[\]]/, 'constant'],
+      [/[<>]/, 'type.identifier'],
+      [/[+-]/, 'number.float'],
+      [/[.,]/, 'operator']
+    ]
+  }
+})
+
 
 let editor = monaco.editor.create(input, {
-  value: 'hello, world',
+  language: 'brainf*ck',
+  value: '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.',
 });
 
 function layout() {
@@ -44,15 +57,38 @@ function layout() {
   output.style.height = `${editorHeight}px`
 }
 
+function setTape(memory, pointer) {
+  let classes = "grid flex-shrink-0 w-12 h-12 p-2 bg-white place-center"
+  for (let i = 0; i < memory.length; i++) {
+    let cell = tape.querySelector(`[data-index="${i}"]`)
+    if (!cell) {
+      cell = document.createElement("div")
+      cell.setAttribute("data-index", `${i}`)
+      tape.append(cell)
+    }
+
+    if (pointer === i) {
+      classes += " border-2 border-gray-600"
+    } else {
+      classes += " border"
+    }
+
+    cell.className = classes
+    cell.innerText = `${memory[i]}`
+  }
+}
+
 layout()
 window.onresize = layout
 
 rust
   .then(mod => {
     runButton.addEventListener('click', event => {
-      let source = editor.getValue() //input.value
+      let source = editor.getValue()
       let result = mod.execute(source)
-      output.textContent = result
+
+      output.innerText = result.stdout
+      setTape(result.memory, result.pointer)
     })
 
   })
