@@ -157,11 +157,12 @@ fn parse(source: &str) -> (Vec<Token>, HashMap<usize, usize>) {
 
     let program = source
         .chars()
+        .filter(|c| "[].+-<>".contains(*c))
         .enumerate()
         .map(|(i, c)| match c {
             '[' => {
                 brackets.push(i);
-                Ok(Token::LoopStart)
+                Token::LoopStart
             }
             ']' => {
                 match brackets.pop() {
@@ -172,16 +173,15 @@ fn parse(source: &str) -> (Vec<Token>, HashMap<usize, usize>) {
                     None => panic!("Unmatched brackets!"),
                 };
 
-                Ok(Token::LoopEnd)
+                Token::LoopEnd
             }
-            '+' => Ok(Token::Increment),
-            '-' => Ok(Token::Decrement),
-            '>' => Ok(Token::ShiftR),
-            '<' => Ok(Token::ShiftL),
-            '.' => Ok(Token::Print),
-            _ => Err(()),
+            '+' => Token::Increment,
+            '-' => Token::Decrement,
+            '>' => Token::ShiftR,
+            '<' => Token::ShiftL,
+            '.' => Token::Print,
+            _ => panic!(format!("Unexpected character, {}", c)),
         })
-        .filter_map(Result::ok)
         .collect();
 
     (program, bracket_map)
@@ -230,5 +230,23 @@ mod tests {
         let mut prog = Program::new(source);
 
         assert_eq!("Hello World!\n", prog.execute());
+    }
+
+    #[test]
+    fn test_print_hello_world_with_commentary() {
+        let source = "This program prints 'Hello World!'\n++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
+        let mut prog = Program::new(source);
+
+        assert_eq!("Hello World!\n", prog.execute());
+    }
+
+    #[test]
+    fn test_move_value() {
+        let source = "+++++>>[-]<<[->>+<<]";
+        let mut prog = Program::new(source);
+
+        prog.execute();
+        assert_eq!(*prog.tape.get(&0).unwrap(), 0);
+        assert_eq!(*prog.tape.get(&2).unwrap(), 5);
     }
 }
