@@ -9,7 +9,7 @@ license = "MIT"
 crate-type = ["cdylib"]
 
 [dependencies]
-iaith = "0.0.3-beta.1"
+iaith = "0.0.4-beta.1"
 serde = { version = "1.0", features = ["derive"] }
 wasm-bindgen = { version = "0.2.68", features = ["serde-serialize"]}
 

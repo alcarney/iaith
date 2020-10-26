@@ -14,9 +14,9 @@ checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
 name = "iaith"
-version = "0.0.3-beta.1"
+version = "0.0.4-beta.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85cc949fdc88484cb482a4f51fabeda487bd5709bedd11a2766665ddc710f532"
+checksum = "c5b3943ed71c50e07260be0a6857ff2416b76d8d4cae90cf6e32a8dd2d197366"
 
 [[package]]
 name = "iaith_web"
