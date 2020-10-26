@@ -547,10 +547,6 @@ video {
   height: auto;
 }
 
-.place-center {
-  place-items: center;
-}
-
 .bg-white {
   --bg-opacity: 1;
   background-color: #fff;
@@ -601,6 +597,10 @@ video {
 
 .grid {
   display: grid;
+}
+
+.place-items-center {
+  place-items: center;
 }
 
 .items-center {
