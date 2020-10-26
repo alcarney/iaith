@@ -59,7 +59,7 @@ function layout() {
 
 function setTape(memory, pointer) {
   for (let i = 0; i < memory.length; i++) {
-    let classes = "grid flex-shrink-0 w-12 h-12 p-2 bg-white place-center"
+    let classes = "grid flex-shrink-0 w-12 h-12 p-2 bg-white place-items-center"
 
     let cell = tape.querySelector(`[data-index="${i}"]`)
     if (!cell) {
